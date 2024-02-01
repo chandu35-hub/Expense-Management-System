@@ -1,13 +1,13 @@
-import React, { Children } from 'react'
+import React from 'react'
 import Header from './Header'
 import Footer from './Footer'
 
-const Layout = ({ Children} ) => {
+const Layout = ({ children} ) => {
   return (
     <>
       <Header />
       <div className='content'>
-        {Children}
+        {children}
       </div>
       <Footer />
     </>
