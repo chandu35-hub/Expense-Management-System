@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {Form, Input, message} from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
@@ -15,13 +15,20 @@ const Login = () => {
             const {data} = await axios.post('/users/login', values)
             setLoading(false)
             message.success('login success')
-            localStorage.setItem('user', JSON.stringify({...data, password:''}))
+            localStorage.setItem('user', JSON.stringify({...data.user, password:''}))
             navigate('/')
         } catch (error) {
             setLoading(false)
             message.error('something went wrong')
         }
     }
+
+     // prevent for login user
+    useEffect(() => {
+        if (localStorage.getItem('user')) {
+        navigate('/')
+        }
+    }, [navigate])
 
   return (
     <>

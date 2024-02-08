@@ -12,7 +12,7 @@ const loginController = async (req, res) => {
             success: true,
             user})
     } catch (error) {
-        res.statur(400).json({
+        res.status(400).json({
             success:false,
             error
         })
