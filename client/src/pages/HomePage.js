@@ -1,17 +1,52 @@
-import React, { useState } from "react";
-import { Form, Input, Modal, Select } from "antd";
+import React, { useState, useEffect } from "react";
+import { Form, Input, Modal, Select, message } from "antd";
 import Layout from "../components/layouts/Layout";
+import axios from "axios";
+import Spinner from "../components/Spinner";
 
 const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [allTransaction, setAllTransaction] = useState ([])
+
+  // getall transactions
+  const getAllTransactions = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('user'))
+      setLoading(true)
+      const res = await axios.post ('/transactions/get-transaction', {userid: user._id})
+      setLoading (false)
+      setAllTransaction(res.data)
+      console.log (res.data)
+    } catch (error) {
+      console.log (error)
+      message.error ('Fetch Issue with Transaction')
+    }
+  }
+
+  // useEffect Hook 
+  useEffect(() => {
+    getAllTransactions()
+  }, [])
 
   // form handling
-  const handleSubmit = (values) => {
-    console.log (values)
+  const handleSubmit = async (values) => {
+    try {
+      const user = JSON.parse (localStorage.getItem('user'))
+      setLoading(true)
+      await axios.post ('/transactions/add-transaction', {...values, userid: user._id})
+      setLoading (false)
+      message.success ('Transaction Added Successfully')
+      setShowModal (false)
+    } catch (error) {
+      setLoading (false)
+      message.error ('Failed to add Transaction')
+    }
   }
 
   return (
     <Layout>
+      {loading && <Spinner />}
       <div className="filters">
         <div>range filters</div>
         <div>
